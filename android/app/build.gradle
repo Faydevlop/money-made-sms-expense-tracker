@@ -62,6 +62,14 @@ react {
  */
 def enableProguardInReleaseBuilds = false
 
+/** Upload-key settings from android/keystore.properties (not in git). */
+def uploadKeystore = null
+def uploadKeystoreFile = rootProject.file('keystore.properties')
+if (uploadKeystoreFile.exists()) {
+    uploadKeystore = new Properties()
+    uploadKeystoreFile.withInputStream { uploadKeystore.load(it) }
+}
+
 /**
  * The preferred build flavor of JavaScriptCore (JSC)
  *
@@ -80,13 +88,13 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.tally.expensetracker"
+    namespace "com.faydevlop.moneymade"
     defaultConfig {
-        applicationId "com.tally.expensetracker"
+        applicationId "com.faydevlop.moneymade"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
     }
     signingConfigs {
         debug {
@@ -95,15 +103,25 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        // Play Store upload key. The keystore and android/keystore.properties are
+        // kept out of git; back both up — see docs/play-store/release-checklist.md.
+        if (uploadKeystore != null) {
+            release {
+                storeFile file(uploadKeystore['storeFile'])
+                storePassword uploadKeystore['storePassword']
+                keyAlias uploadKeystore['keyAlias']
+                keyPassword uploadKeystore['keyPassword']
+            }
+        }
     }
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
         }
         release {
-            // Caution! In production, you need to generate your own keystore file.
-            // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
+            // Signed with the upload key when android/keystore.properties exists,
+            // otherwise with the debug key (local testing only — Play rejects it).
+            signingConfig uploadKeystore != null ? signingConfigs.release : signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
         }
