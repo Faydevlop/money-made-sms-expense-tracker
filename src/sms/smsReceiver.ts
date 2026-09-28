@@ -2,8 +2,8 @@ import { DeviceEventEmitter, NativeModules, PermissionsAndroid, Platform } from 
 import { RawSms } from '../types/transaction';
 
 /**
- * Thin wrapper around the native TallySms module
- * (android/app/src/main/java/com/tally/expensetracker/sms).
+ * Thin wrapper around the native MoneyMadeSms module
+ * (android/app/src/main/java/com/faydevlop/moneymade/sms).
  * Every call degrades gracefully when the module or permission is unavailable.
  */
 
@@ -17,8 +17,8 @@ interface NativeSms {
   setTrackingEnabled(enabled: boolean): void;
 }
 
-const Native: NativeSms | undefined = Platform.OS === 'android' ? NativeModules.TallySms : undefined;
-const EVENT = 'TallySmsReceived';
+const Native: NativeSms | undefined = Platform.OS === 'android' ? NativeModules.MoneyMadeSms : undefined;
+const EVENT = 'MoneyMadeSmsReceived';
 
 const PERMS = [PermissionsAndroid.PERMISSIONS.READ_SMS, PermissionsAndroid.PERMISSIONS.RECEIVE_SMS];
 

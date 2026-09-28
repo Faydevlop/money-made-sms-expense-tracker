@@ -1,4 +1,4 @@
-package com.tally.expensetracker
+package com.faydevlop.moneymade
 
 import android.app.Application
 import com.facebook.react.PackageList
@@ -6,7 +6,7 @@ import com.facebook.react.ReactApplication
 import com.facebook.react.ReactHost
 import com.facebook.react.ReactNativeApplicationEntryPoint.loadReactNative
 import com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
-import com.tally.expensetracker.sms.SmsPackage
+import com.faydevlop.moneymade.sms.SmsPackage
 
 class MainApplication : Application(), ReactApplication {
 

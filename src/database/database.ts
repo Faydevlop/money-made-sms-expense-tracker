@@ -71,7 +71,7 @@ export function getDatabase(): Promise<SqlExecutor> {
   if (!opening) {
     opening = (async () => {
       try {
-        const db = wrap(open({ name: 'tally.sqlite' }));
+        const db = wrap(open({ name: 'moneymade.sqlite' }));
         await db.run('PRAGMA journal_mode = WAL');
         await migrate(db);
         instance = db;

@@ -1,4 +1,4 @@
-package com.tally.expensetracker.sms
+package com.faydevlop.moneymade.sms
 
 import android.content.BroadcastReceiver
 import android.content.Context

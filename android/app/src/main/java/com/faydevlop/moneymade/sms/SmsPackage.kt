@@ -1,4 +1,4 @@
-package com.tally.expensetracker.sms
+package com.faydevlop.moneymade.sms
 
 import com.facebook.react.ReactPackage
 import com.facebook.react.bridge.NativeModule

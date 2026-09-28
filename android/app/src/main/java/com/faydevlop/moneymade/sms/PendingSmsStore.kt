@@ -1,4 +1,4 @@
-package com.tally.expensetracker.sms
+package com.faydevlop.moneymade.sms
 
 import android.content.Context
 import org.json.JSONArray
@@ -10,7 +10,7 @@ import org.json.JSONObject
  * Nothing here is logged or sent anywhere.
  */
 object PendingSmsStore {
-  private const val PREFS = "tally_sms"
+  private const val PREFS = "moneymade_sms"
   private const val KEY_QUEUE = "pending"
   private const val KEY_TRACKING = "tracking_enabled"
   private const val MAX_QUEUE = 500

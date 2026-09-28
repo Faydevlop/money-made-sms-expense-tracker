@@ -1,4 +1,4 @@
-package com.tally.expensetracker.sms
+package com.faydevlop.moneymade.sms
 
 /**
  * Cheap native pre-filter so that personal messages never cross into JS.

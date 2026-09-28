@@ -1,4 +1,4 @@
-package com.tally.expensetracker.sms
+package com.faydevlop.moneymade.sms
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -18,8 +18,8 @@ import java.util.concurrent.Executors
 class SmsModule(private val ctx: ReactApplicationContext) : ReactContextBaseJavaModule(ctx) {
 
   companion object {
-    const val NAME = "TallySms"
-    const val EVENT_RECEIVED = "TallySmsReceived"
+    const val NAME = "MoneyMadeSms"
+    const val EVENT_RECEIVED = "MoneyMadeSmsReceived"
     private var current: WeakReference<ReactApplicationContext>? = null
     private val io = Executors.newSingleThreadExecutor()
 

@@ -1,4 +1,4 @@
-package com.tally.expensetracker
+package com.faydevlop.moneymade
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
