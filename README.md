@@ -1,5 +1,7 @@
 # Money Made — SMS expense tracker (React Native, Android & iOS)
 
+![Money Made — spending, sorted automatically](assets/hero.png)
+
 Money Made reads bank and UPI transaction SMS **on the device**, turns them into categorized
 transactions in a local SQLite database, and shows monthly/weekly/daily spending analytics.
 No backend, no account, no network calls. Release builds do not even request the
