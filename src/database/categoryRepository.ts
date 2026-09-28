@@ -48,6 +48,12 @@ export function createCategoryRepository(db: SqlExecutor) {
       await db.run('DELETE FROM merchant_rules WHERE id = ?', [id]);
     },
 
+    /** Full reset: all merchant rules and user-created categories. */
+    async removeAllUserData(): Promise<void> {
+      await db.run('DELETE FROM merchant_rules');
+      await db.run('DELETE FROM categories WHERE is_system = 0');
+    },
+
     async removeRulesForCategory(category: string): Promise<void> {
       await db.run('DELETE FROM merchant_rules WHERE category = ?', [category]);
     },

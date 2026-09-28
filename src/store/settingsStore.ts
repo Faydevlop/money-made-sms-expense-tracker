@@ -12,6 +12,8 @@ interface SettingsState extends PersistedSettings {
   update(patch: Partial<PersistedSettings>): Promise<void>;
   setPermission(p: SmsPermission): void;
   setScanning(v: boolean): void;
+  /** Back to first-launch defaults (after the database was erased). */
+  resetToDefaults(): void;
 }
 
 export const useSettingsStore = create<SettingsState>((set, get) => ({
@@ -36,4 +38,5 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
 
   setPermission: permission => set({ permission }),
   setScanning: scanning => set({ scanning }),
+  resetToDefaults: () => set({ ...DEFAULT_SETTINGS }),
 }));

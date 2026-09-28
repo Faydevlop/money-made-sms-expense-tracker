@@ -264,8 +264,8 @@ export function OnboardingScreen({ navigation, route }: Props) {
       <FadeIn index={2}>
         <T size={15} color={colors.muted} style={styles.mt12}>
           {IOS
-            ? 'Automatic transaction tracking: an iOS Shortcuts automation hands each bank SMS to Money Made, which records your income and expenses. Your transaction data is stored locally on this device.'
-            : 'Automatic transaction tracking: Money Made reads the transaction SMS messages on your device to automatically record your income and expenses. Your transaction data is stored locally on this device.'}
+            ? 'Automatic transaction tracking: an iOS Shortcuts automation hands each bank SMS to Money Made, which reads the amount, merchant, date and account’s last digits to record your income and expenses. Everything is processed and stored only on this phone and is never uploaded or shared.'
+            : 'Automatic transaction tracking: Money Made reads the SMS messages on this phone to find bank and UPI transaction alerts, and uses the amount, merchant, date and account’s last digits to record your income and expenses. Everything is processed and stored only on this phone — your SMS and transaction data are never uploaded or shared.'}
         </T>
       </FadeIn>
 
@@ -352,6 +352,15 @@ export function OnboardingScreen({ navigation, route }: Props) {
           onPress={allow}
         />
       )}
+      <T size={12} color={colors.muted} center style={styles.consent}>
+        {IOS
+          ? 'By continuing you agree to Money Made processing the bank SMS your Shortcut sends, as described in the '
+          : 'By tapping “Allow SMS access” you agree to Money Made reading transaction SMS on this phone, as described in the '}
+        <T size={12} w={700} color={colors.ink} style={styles.link} onPress={() => navigation.navigate('PrivacyPolicy')} accessibilityRole="link">
+          Privacy Policy
+        </T>
+        .
+      </T>
       <PillButton
         label={unavailable ? 'Continue' : 'Not now'}
         variant="ghost"
@@ -394,6 +403,8 @@ const styles = StyleSheet.create({
   mt10: { marginTop: 10 },
   mt12: { marginTop: 12 },
   mt22: { marginTop: 22 },
+  consent: { marginTop: 14, paddingHorizontal: 8 },
+  link: { textDecorationLine: 'underline' },
   features: { gap: 10, marginTop: 24 },
   feature: {
     flexDirection: 'row',

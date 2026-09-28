@@ -180,4 +180,23 @@ describe('ingestion pipeline', () => {
     expect(t?.category).toBeNull();
     expect(t?.isCategorized).toBe(false);
   });
+
+  it('erase everything removes transactions, rules, custom categories and settings', async () => {
+    const { db, service, txRepo, catRepo } = await setup();
+    const settingsRepo = createSettingsRepository(db);
+    await settingsRepo.set('onboardingDone', true);
+    const c = await service.addCategory('Pets', await catRepo.getAll());
+    const r = await service.ingest([TRANSACTION_FIXTURES[0].sms], { now: NOW });
+    await service.setCategory(r.inserted, r.inserted[0].id, c.name, true);
+
+    await txRepo.deleteAll();
+    await catRepo.removeAllUserData();
+    await settingsRepo.clear();
+
+    expect(await txRepo.getAll()).toHaveLength(0);
+    expect(await catRepo.getRules()).toHaveLength(0);
+    expect((await catRepo.getAll()).some(x => x.name === 'Pets')).toBe(false);
+    expect((await catRepo.getAll()).some(x => x.name === 'Food')).toBe(true);
+    expect((await settingsRepo.load()).onboardingDone).toBe(false);
+  });
 });

@@ -12,6 +12,7 @@ import { DetectionScreen } from '../screens/DetectionScreen';
 import { ExcludedScreen } from '../screens/ExcludedScreen';
 import { HomeScreen } from '../screens/HomeScreen';
 import { OnboardingScreen } from '../screens/OnboardingScreen';
+import { PrivacyPolicyScreen } from '../screens/PrivacyPolicyScreen';
 import { SettingsScreen } from '../screens/SettingsScreen';
 import { ShortcutSetupScreen } from '../screens/ShortcutSetupScreen';
 import { TransactionDetailsScreen } from '../screens/TransactionDetailsScreen';
@@ -69,6 +70,7 @@ export function AppNavigator({ initialRoute }: { initialRoute: 'Onboarding' | 'T
         <Stack.Screen name="Data" component={DataScreen} />
         <Stack.Screen name="About" component={AboutScreen} />
         <Stack.Screen name="ShortcutSetup" component={ShortcutSetupScreen} />
+        <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

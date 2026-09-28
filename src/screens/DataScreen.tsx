@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import {
   ActivityIndicator,
@@ -10,6 +11,7 @@ import { ListRow, StackScreen } from '../components/common';
 import { Card } from '../components/ui/controls';
 import { T } from '../components/ui/T';
 import { colors } from '../constants/colors';
+import { setNativeTracking } from '../sms/smsReceiver';
 import { useSettingsStore } from '../store/settingsStore';
 import { useTransactionStore } from '../store/transactionStore';
 import { useUiStore } from '../store/uiStore';
@@ -61,6 +63,8 @@ export function DataScreen() {
   const loadSample = useTransactionStore(s => s.loadSampleData);
   const removeSample = useTransactionStore(s => s.removeSampleData);
   const deleteAll = useTransactionStore(s => s.deleteAllData);
+  const eraseEverything = useTransactionStore(s => s.eraseEverything);
+  const nav = useNavigation();
   const updateSettings = useSettingsStore(s => s.update);
   const showToast = useUiStore(s => s.showToast);
   const [busy, setBusy] = useState(false);
@@ -105,6 +109,27 @@ export function DataScreen() {
               // Next scan re-imports the inbox from scratch if tracking is on.
               await updateSettings({ lastScanAt: 0 });
               showToast('All transactions deleted');
+            }),
+        },
+      ],
+    );
+
+  const confirmErase = () =>
+    Alert.alert(
+      'Erase all app data?',
+      'This permanently deletes every transaction, rule, custom category and setting from this device, and stops SMS tracking. The app returns to its first-launch state. This cannot be undone.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Erase everything',
+          style: 'destructive',
+          onPress: () =>
+            guard(async () => {
+              setNativeTracking(false); // also clears the native pending-SMS queue
+              await eraseEverything();
+              useSettingsStore.getState().resetToDefaults();
+              nav.reset({ index: 0, routes: [{ name: 'Onboarding' }] });
+              showToast('All app data erased');
             }),
         },
       ],
@@ -165,8 +190,15 @@ export function DataScreen() {
         <ListRow
           icon="trash"
           label="Delete all transactions"
-          sub="Remove everything stored on this device"
+          sub="Keeps your settings, categories and rules"
           onPress={confirmDelete}
+          divider
+        />
+        <ListRow
+          icon="trash"
+          label="Erase all app data"
+          sub="Transactions, rules, categories and settings"
+          onPress={confirmErase}
         />
       </Card>
 

@@ -76,6 +76,8 @@ interface TransactionState {
   loadSampleData(): Promise<IngestReport>;
   removeSampleData(): Promise<void>;
   deleteAllData(): Promise<void>;
+  /** Deletes every transaction, rule, custom category and setting. */
+  eraseEverything(): Promise<void>;
 }
 
 export const useTransactionStore = create<TransactionState>((set, get) => {
@@ -179,6 +181,14 @@ export const useTransactionStore = create<TransactionState>((set, get) => {
       const { txRepo } = await getDeps();
       await txRepo.deleteBySource('sample');
       set(s => ({ transactions: s.transactions.filter(t => t.source !== 'sample') }));
+    },
+
+    async eraseEverything() {
+      const { txRepo, catRepo, settingsRepo } = await getDeps();
+      await txRepo.deleteAll();
+      await catRepo.removeAllUserData();
+      await settingsRepo.clear();
+      await reloadAll();
     },
 
     async deleteAllData() {

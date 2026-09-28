@@ -1,10 +1,13 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Logo, StackScreen } from '../components/common';
+import { Linking, StyleSheet, View } from 'react-native';
+import { ListRow, Logo, StackScreen } from '../components/common';
 import { Card } from '../components/ui/controls';
 import { Icon, IconName } from '../components/ui/Icon';
 import { T } from '../components/ui/T';
 import { colors } from '../constants/colors';
+import { CONTACT_EMAIL, DEVELOPER } from '../legal/privacyPolicy';
+import { useUiStore } from '../store/uiStore';
 import { APP_VERSION } from './SettingsScreen';
 
 function Point({
@@ -34,6 +37,8 @@ function Point({
 }
 
 export function AboutScreen() {
+  const nav = useNavigation();
+  const showToast = useUiStore(s => s.showToast);
   return (
     <StackScreen title="Privacy & about">
       <Card bg={colors.lime} radius={26} style={styles.card}>
@@ -58,6 +63,16 @@ export function AboutScreen() {
           body="Only the last digits your bank includes in the SMS are kept, shown as XXXX1234."
         />
       </Card>
+      <Card radius={26} style={styles.links}>
+        <ListRow icon="shield" label="Privacy policy" sub="How your data is handled" onPress={() => nav.navigate('PrivacyPolicy')} divider />
+        <ListRow icon="trash" label="Delete my data" sub="Delete transactions or erase everything" onPress={() => nav.navigate('Data')} divider />
+        <ListRow
+          icon="msg"
+          label="Contact"
+          sub={CONTACT_EMAIL}
+          onPress={() => Linking.openURL(`mailto:${CONTACT_EMAIL}`).catch(() => showToast(CONTACT_EMAIL))}
+        />
+      </Card>
       <Card radius={26} style={styles.card}>
         <View style={styles.brand}>
           <Logo size={48} />
@@ -69,6 +84,9 @@ export function AboutScreen() {
           Personal expense tracker that reads bank and UPI SMS on-device.
           Categories come from built-in merchant rules and your own corrections.
         </T>
+        <T size={12} i color={colors.muted2} style={styles.dev}>
+          Made by {DEVELOPER}
+        </T>
       </Card>
     </StackScreen>
   );
@@ -76,6 +94,8 @@ export function AboutScreen() {
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
+  links: { marginTop: 4, marginBottom: 8, paddingVertical: 4, paddingHorizontal: 18 },
+  dev: { marginTop: 8 },
   brand: {
     flexDirection: 'row',
     alignItems: 'center',
