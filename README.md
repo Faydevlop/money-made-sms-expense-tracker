@@ -1,4 +1,4 @@
-# Money Made — SMS expense tracker (React Native, Android)
+# Money Made — SMS expense tracker (React Native, Android & iOS)
 
 Money Made reads bank and UPI transaction SMS **on the device**, turns them into categorized
 transactions in a local SQLite database, and shows monthly/weekly/daily spending analytics.
@@ -36,6 +36,60 @@ The debug APK embeds the JS bundle (`debuggableVariants = []` in `android/app/bu
 so it runs without Metro. When Metro is running, it loads from Metro instead.
 
 To build faster for one device type: `gradlew assembleDebug -PreactNativeArchitectures=arm64-v8a`.
+
+## iOS (build on a Mac)
+
+iOS apps cannot read SMS, so on iPhone an **iOS Shortcuts automation** forwards each
+bank SMS to the app through the link `moneymade://sms?text=…`. The app parses it with the
+same engine as Android (see *Settings → Transaction detection → Setup guide* in the app).
+
+### One-time Mac setup
+
+1. Install **Xcode** from the App Store, open it once and accept the licence.
+2. Install Node 22+ and CocoaPods: `brew install node cocoapods`
+3. In Xcode → Settings → Accounts, add your Apple ID (a free account works).
+
+### Build and install on your iPhone
+
+```bash
+git clone -b dev https://github.com/Faydevlop/money-made-sms-expense-tracker.git
+cd money-made-sms-expense-tracker
+npm install
+cd ios && pod install && cd ..
+open ios/MoneyMade.xcworkspace        # the .xcworkspace, not the .xcodeproj
+```
+
+In Xcode:
+
+1. Select the **MoneyMade** target → **Signing & Capabilities** → Team: your *Personal Team*.
+   If Xcode says the bundle identifier is taken, change `com.faydevlop.moneymade` to
+   something unique (e.g. `com.yourname.moneymade`).
+2. **Product → Scheme → Edit Scheme… → Run → Build Configuration: Release**
+   (the JS is bundled into the app, so it runs without Metro).
+3. Plug in the iPhone, pick it as the run destination, press **Run** (⌘R).
+4. First time only, on the iPhone: enable **Settings → Privacy & Security → Developer Mode**,
+   and trust your developer profile under **Settings → General → VPN & Device Management**.
+
+With a free Apple ID the app stays installed for **7 days**; run it from Xcode again to renew.
+A paid Apple Developer account removes that limit and enables TestFlight.
+
+For development with fast refresh instead: keep the scheme on **Debug**, run `npm start` on the
+Mac, and have the iPhone on the same Wi-Fi.
+
+### Automatic tracking on iPhone (Shortcuts)
+
+Open the app → *Settings → Transaction detection → Setup guide*. In short:
+
+1. Shortcuts → Automation → New Automation → **Message**, *Message Contains* `Rs`,
+   **Run Immediately** (Notify When Run off) → New Blank Automation.
+2. Action **URL Encode** → input *Shortcut Input* → *Content*.
+3. Action **Open URLs** → `moneymade://sms?text=` followed by the *URL Encoded Text* variable.
+4. Repeat with *Message Contains* `INR`.
+
+### CI
+
+`.github/workflows/ios-build.yml` compiles the iOS app on a GitHub macOS runner on every push
+(unsigned simulator build), so iOS build errors show up without a Mac.
 
 ## Tests
 

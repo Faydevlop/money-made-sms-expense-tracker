@@ -1,0 +1,45 @@
+# Compiles the iOS app on a macOS runner (unsigned simulator build), so iOS
+# build errors are caught without needing a Mac or an Apple Developer account.
+name: iOS build
+
+on:
+  push:
+    branches: [dev, main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  ios:
+    runs-on: macos-15
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install JS dependencies
+        run: npm ci
+
+      - name: Type check and unit tests
+        run: |
+          npx tsc --noEmit
+          npx jest --ci
+
+      - name: Install CocoaPods
+        working-directory: ios
+        run: pod install
+
+      - name: Build for iOS Simulator (unsigned)
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -workspace ios/MoneyMade.xcworkspace \
+            -scheme MoneyMade \
+            -configuration Release \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO \
+            build | tail -n 80
