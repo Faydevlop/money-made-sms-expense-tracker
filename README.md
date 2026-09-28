@@ -107,15 +107,22 @@ In debug builds, Settings → Data management → **Load sample data** loads 12 
 realistic bank SMS through the same parser, categorizer and duplicate detection as real
 messages. **Remove sample data** deletes them again. Release builds only show real data.
 
-## Production APK
+## Google Play release
+
+Package: `com.faydevlop.moneymade`. Release builds are signed with the upload key from
+`android/keystore.properties` + `android/app/moneymade-upload.keystore` (both git-ignored — back
+them up). Without those files, release builds fall back to the debug key (local testing only).
 
 ```powershell
 cd android
-.\gradlew assembleRelease "-PreactNativeArchitectures=arm64-v8a"
-# → android/app/build/outputs/apk/release/app-release.apk
+.\gradlew bundleRelease     # → android/app/build/outputs/bundle/release/app-release.aab (upload this)
+.\gradlew assembleRelease   # → android/app/build/outputs/apk/release/app-release.apk (sideload)
 ```
 
-Release builds are currently signed with the debug keystore (fine for sideloading).
+Everything needed for Play Console — store listing, graphics, Data safety answers, the SMS
+permission declaration and a step-by-step checklist — is in [`docs/play-store/`](docs/play-store/).
+The privacy policy lives in `src/legal/privacyPolicy.ts` (shown in the app) and is published from
+`docs/privacy-policy.html` via GitHub Pages (`node scripts/build-privacy-page.js` regenerates it).
 
 ## Motion
 
