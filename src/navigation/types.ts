@@ -18,6 +18,7 @@ export type RootStackParamList = {
   Excluded: undefined;
   Data: undefined;
   About: undefined;
+  ShortcutSetup: undefined;
 };
 
 declare global {

@@ -1,0 +1,61 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/assets/fonts/Urbanist-Black.ttf",
+      "sha1": "4a642c30d7e3fb77ec13fa401b82f0f105fa5b35"
+    },
+    {
+      "path": "src/assets/fonts/Urbanist-BlackItalic.ttf",
+      "sha1": "39598bbc6c2cfa495298b8ba7917ec67d205b560"
+    },
+    {
+      "path": "src/assets/fonts/Urbanist-Bold.ttf",
+      "sha1": "41dd99831db8c987d33ce7f6f5f2544bd467e0ec"
+    },
+    {
+      "path": "src/assets/fonts/Urbanist-BoldItalic.ttf",
+      "sha1": "092f121ca5b447d312a90f7fb75135be84faf481"
+    },
+    {
+      "path": "src/assets/fonts/Urbanist-ExtraBold.ttf",
+      "sha1": "0d2d313f6ad42a24b15bda980a750f542173f5ed"
+    },
+    {
+      "path": "src/assets/fonts/Urbanist-ExtraBoldItalic.ttf",
+      "sha1": "07f2742a8910a2924ad9761b3b1c54df725abd53"
+    },
+    {
+      "path": "src/assets/fonts/Urbanist-Italic.ttf",
+      "sha1": "f90d236c879ac86d1b429d9f2303b7d558144875"
+    },
+    {
+      "path": "src/assets/fonts/Urbanist-Light.ttf",
+      "sha1": "8b2d02bfeae6056205ac580eb86c81a421191a45"
+    },
+    {
+      "path": "src/assets/fonts/Urbanist-LightItalic.ttf",
+      "sha1": "ca198d07ba2da1843e3bdda1162c2566d421e693"
+    },
+    {
+      "path": "src/assets/fonts/Urbanist-Medium.ttf",
+      "sha1": "602c5a88ff20cc34e73f71fec63f94163e449761"
+    },
+    {
+      "path": "src/assets/fonts/Urbanist-MediumItalic.ttf",
+      "sha1": "3b3861b2dcb28644dd2f38e53f69d7496328bc68"
+    },
+    {
+      "path": "src/assets/fonts/Urbanist-Regular.ttf",
+      "sha1": "67845f32189770bb094b05d6ba132f6b0553bd81"
+    },
+    {
+      "path": "src/assets/fonts/Urbanist-SemiBold.ttf",
+      "sha1": "4b4da8ea38681b4df44617cc492b262c79bd7efc"
+    },
+    {
+      "path": "src/assets/fonts/Urbanist-SemiBoldItalic.ttf",
+      "sha1": "7822a01c6d12f23c3216f810a2c2d8f1b266948f"
+    }
+  ]
+}

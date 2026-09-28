@@ -6,6 +6,7 @@ import { SheetHost, ToastHost } from './src/components/SheetHost';
 import { PillButton } from './src/components/ui/controls';
 import { T } from './src/components/ui/T';
 import { colors } from './src/constants/colors';
+import { useSmsDeepLinks } from './src/hooks/useSmsDeepLinks';
 import { useSmsTracking } from './src/hooks/useSmsTracking';
 import { AppNavigator } from './src/navigation/AppNavigator';
 import { useSettingsStore } from './src/store/settingsStore';
@@ -47,6 +48,7 @@ export default function App() {
   }, [start]);
 
   useSmsTracking(boot === 'ready');
+  useSmsDeepLinks(boot === 'ready');
 
   return (
     <SafeAreaProvider>

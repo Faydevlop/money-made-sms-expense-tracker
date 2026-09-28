@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useMemo } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ListRow } from '../components/common';
 import { FadeIn } from '../components/motion';
@@ -21,6 +21,12 @@ import {
 export const APP_VERSION = '1.0.0';
 
 export function trackingStatus(tracking: boolean, permission: string) {
+  // iOS has no SMS permission: tracking runs through the Shortcuts automation.
+  if (Platform.OS === 'ios') {
+    return tracking
+      ? { label: 'Active', bg: colors.white, fg: colors.green }
+      : { label: 'Not set up', bg: colors.redBg, fg: colors.redDeep };
+  }
   if (tracking && permission === 'granted')
     return { label: 'Active', bg: colors.white, fg: colors.green };
   if (tracking)

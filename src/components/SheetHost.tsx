@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Animated, Easing, KeyboardAvoidingView, Pressable, StyleSheet } from 'react-native';
+import { Animated, Easing, KeyboardAvoidingView, Platform, Pressable, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '../constants/colors';
 import { Sheet, Toast, useUiStore } from '../store/uiStore';
@@ -59,7 +59,7 @@ export function SheetHost() {
   return (
     <SheetProgress.Provider value={progress}>
       <KeyboardAvoidingView
-        behavior="height"
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={StyleSheet.absoluteFill}
         // While closing, let touches fall through to the screen below.
         pointerEvents={sheet ? 'box-none' : 'none'}>

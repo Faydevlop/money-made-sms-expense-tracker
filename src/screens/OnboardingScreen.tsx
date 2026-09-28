@@ -5,6 +5,7 @@ import {
   AppState,
   Easing,
   Linking,
+  Platform,
   ScrollView,
   StyleSheet,
   View,
@@ -27,6 +28,8 @@ import { useSettingsStore } from '../store/settingsStore';
 import { useTransactionStore } from '../store/transactionStore';
 import { inRange, monthIndexOf, monthRange } from '../utils/dateUtils';
 import { shortBankName } from '../utils/transactionUtils';
+
+const IOS = Platform.OS === 'ios';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Onboarding'>;
 type Step =
@@ -160,7 +163,15 @@ export function OnboardingScreen({ navigation, route }: Props) {
     }).start();
   };
 
+  /** iOS: no SMS permission exists; tracking runs through an iOS Shortcuts automation. */
+  const setUpIos = async () => {
+    await update({ onboardingDone: true, trackingEnabled: true }).catch(() => {});
+    if (navigation.canGoBack()) navigation.replace('ShortcutSetup');
+    else navigation.reset({ index: 1, routes: [{ name: 'Tabs' }, { name: 'ShortcutSetup' }] });
+  };
+
   useEffect(() => {
+    if (IOS) return;
     if (route.params?.startAt === 'permission' && !autoStarted.current) {
       autoStarted.current = true;
       allow();
@@ -252,9 +263,9 @@ export function OnboardingScreen({ navigation, route }: Props) {
       </FadeIn>
       <FadeIn index={2}>
         <T size={15} color={colors.muted} style={styles.mt12}>
-          Automatic transaction tracking: Money Made reads the transaction SMS
-          messages on your device to automatically record your income and
-          expenses. Your transaction data is stored locally on this device.
+          {IOS
+            ? 'Automatic transaction tracking: an iOS Shortcuts automation hands each bank SMS to Money Made, which records your income and expenses. Your transaction data is stored locally on this device.'
+            : 'Automatic transaction tracking: Money Made reads the transaction SMS messages on your device to automatically record your income and expenses. Your transaction data is stored locally on this device.'}
         </T>
       </FadeIn>
 
@@ -316,6 +327,14 @@ export function OnboardingScreen({ navigation, route }: Props) {
           justify="space-between"
           minHeight={58}
           onPress={() => Linking.openSettings()}
+        />
+      ) : IOS ? (
+        <PillButton
+          label="Set up automatic tracking"
+          trailingIcon="cr"
+          justify="space-between"
+          minHeight={58}
+          onPress={setUpIos}
         />
       ) : unavailable ? null : (
         <PillButton

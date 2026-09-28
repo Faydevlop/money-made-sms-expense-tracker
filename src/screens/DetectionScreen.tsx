@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useMemo } from 'react';
 import {
   ActivityIndicator,
@@ -5,8 +6,9 @@ import {
   Pressable,
   StyleSheet,
   View,
+  Platform,
 } from 'react-native';
-import { SectionTitle, StackScreen } from '../components/common';
+import { ListRow, SectionTitle, StackScreen } from '../components/common';
 import { Card, PillButton, Switch } from '../components/ui/controls';
 import { Icon } from '../components/ui/Icon';
 import { T } from '../components/ui/T';
@@ -35,7 +37,10 @@ const PERMISSION_LABEL: Record<string, string> = {
   unknown: 'Checking…',
 };
 
+const IOS = Platform.OS === 'ios';
+
 export function DetectionScreen() {
+  const nav = useNavigation();
   const now = useNow();
   const all = useTransactionStore(s => s.transactions);
   const tracking = useSettingsStore(s => s.trackingEnabled);
@@ -85,7 +90,7 @@ export function DetectionScreen() {
   };
 
   const toggleTracking = async (on: boolean) => {
-    if (on && !(await ensurePermission())) return;
+    if (on && !IOS && !(await ensurePermission())) return;
     await update({ trackingEnabled: on });
     setNativeTracking(on);
     showToast(on ? 'Automatic detection on' : 'Automatic detection paused');
@@ -124,25 +129,35 @@ export function DetectionScreen() {
               Automatic detection
             </T>
             <T size={12} color={colors.text2}>
-              Read bank and UPI transaction SMS
+              {IOS
+                ? 'Record bank SMS sent by your Shortcuts automation'
+                : 'Read bank and UPI transaction SMS'}
             </T>
           </View>
           <Switch
             label="Automatic detection"
-            value={tracking && permission === 'granted'}
+            value={IOS ? tracking : tracking && permission === 'granted'}
             onChange={toggleTracking}
           />
         </View>
-        <View style={styles.row}>
-          <View style={styles.flex}>
-            <T size={16} w={700} i>
-              Last inbox scan
-            </T>
-            <T size={12} color={colors.text2}>
-              {lastScanAt ? formatWhen(lastScanAt, now) : 'Not scanned yet'}
-            </T>
+        {IOS ? (
+          <ListRow
+            label="Setup guide"
+            sub="Create the Shortcuts automation"
+            onPress={() => nav.navigate('ShortcutSetup')}
+          />
+        ) : (
+          <View style={styles.row}>
+            <View style={styles.flex}>
+              <T size={16} w={700} i>
+                Last inbox scan
+              </T>
+              <T size={12} color={colors.text2}>
+                {lastScanAt ? formatWhen(lastScanAt, now) : 'Not scanned yet'}
+              </T>
+            </View>
           </View>
-        </View>
+        )}
       </Card>
 
       <SectionTitle>Detected senders</SectionTitle>
@@ -183,24 +198,35 @@ export function DetectionScreen() {
       </Card>
 
       <Card radius={26} style={styles.main}>
-        <Pressable
-          accessibilityRole="button"
-          disabled={permission === 'granted'}
-          onPress={ensurePermission}
-          style={[styles.rowBetween, styles.divider]}
-        >
-          <T size={14} i>
-            SMS permission
-          </T>
-          <T
-            size={14}
-            w={700}
-            i
-            color={permission === 'granted' ? colors.ink : colors.redText}
+        {IOS ? (
+          <View style={[styles.rowBetween, styles.divider]}>
+            <T size={14} i>
+              Source
+            </T>
+            <T size={14} w={700} i>
+              iOS Shortcuts
+            </T>
+          </View>
+        ) : (
+          <Pressable
+            accessibilityRole="button"
+            disabled={permission === 'granted'}
+            onPress={ensurePermission}
+            style={[styles.rowBetween, styles.divider]}
           >
-            {PERMISSION_LABEL[permission]}
-          </T>
-        </Pressable>
+            <T size={14} i>
+              SMS permission
+            </T>
+            <T
+              size={14}
+              w={700}
+              i
+              color={permission === 'granted' ? colors.ink : colors.redText}
+            >
+              {PERMISSION_LABEL[permission]}
+            </T>
+          </Pressable>
+        )}
         <View style={styles.rowBetween}>
           <T size={14} i>
             OTP & promotional SMS
@@ -212,7 +238,14 @@ export function DetectionScreen() {
       </Card>
 
       <View style={styles.cta}>
-        {scanning ? (
+        {IOS ? (
+          <PillButton
+            icon="repeat"
+            label="How to set up the Shortcut"
+            justify="flex-start"
+            onPress={() => nav.navigate('ShortcutSetup')}
+          />
+        ) : scanning ? (
           <View style={styles.scanning}>
             <ActivityIndicator color={colors.white} />
             <T size={16} w={700} i color={colors.white}>

@@ -13,6 +13,7 @@ import { ExcludedScreen } from '../screens/ExcludedScreen';
 import { HomeScreen } from '../screens/HomeScreen';
 import { OnboardingScreen } from '../screens/OnboardingScreen';
 import { SettingsScreen } from '../screens/SettingsScreen';
+import { ShortcutSetupScreen } from '../screens/ShortcutSetupScreen';
 import { TransactionDetailsScreen } from '../screens/TransactionDetailsScreen';
 import { TransactionsScreen } from '../screens/TransactionsScreen';
 import { UncategorizedScreen } from '../screens/UncategorizedScreen';
@@ -67,6 +68,7 @@ export function AppNavigator({ initialRoute }: { initialRoute: 'Onboarding' | 'T
         <Stack.Screen name="Excluded" component={ExcludedScreen} />
         <Stack.Screen name="Data" component={DataScreen} />
         <Stack.Screen name="About" component={AboutScreen} />
+        <Stack.Screen name="ShortcutSetup" component={ShortcutSetupScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

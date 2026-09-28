@@ -1,6 +1,6 @@
-import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
+import DateTimePicker, { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import React, { useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Platform, Pressable, StyleSheet, View } from 'react-native';
 import { colors } from '../../constants/colors';
 import { useUiStore } from '../../store/uiStore';
 import { MONTHS_SHORT, parseIsoDate, toIsoDate } from '../../utils/dateUtils';
@@ -19,6 +19,27 @@ function pretty(iso: string): string {
 }
 
 function DateField({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
+  if (Platform.OS === 'ios') {
+    // iOS has no imperative picker: use the native compact date control inline.
+    return (
+      <View style={styles.field}>
+        <T size={13} w={600} i color={colors.muted}>
+          {label}
+        </T>
+        <View style={[styles.input, styles.iosInput]}>
+          <DateTimePicker
+            value={new Date(parseIsoDate(value) ?? Date.now())}
+            mode="date"
+            display="compact"
+            minimumDate={MIN_DATE}
+            maximumDate={new Date()}
+            accentColor={colors.ink}
+            onChange={(_e, date) => date && onChange(toIsoDate(date.getTime()))}
+          />
+        </View>
+      </View>
+    );
+  }
   const open = () => {
     DateTimePickerAndroid.open({
       value: new Date(parseIsoDate(value) ?? Date.now()),
@@ -83,5 +104,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   flex: { flex: 1 },
+  iosInput: { justifyContent: 'flex-start', paddingHorizontal: 6 },
   cta: { paddingHorizontal: 16, paddingBottom: 18 },
 });

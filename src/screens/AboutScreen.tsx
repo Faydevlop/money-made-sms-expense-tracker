@@ -50,7 +50,7 @@ export function AboutScreen() {
         <Point
           icon="shield"
           title="Nothing is sent anywhere"
-          body="Release builds have no internet permission. SMS content, account numbers and UPI IDs are never logged."
+          body="Release builds make no network requests. SMS content, account numbers and UPI IDs are never logged."
         />
         <Point
           icon="bank"

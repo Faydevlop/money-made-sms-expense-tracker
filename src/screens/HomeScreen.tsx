@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useMemo } from 'react';
-import { Image, ScrollView, StyleSheet, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, View, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { CategoryCard } from '../components/CategoryCard';
 import { EmptyState } from '../components/common';
@@ -101,9 +101,20 @@ export function HomeScreen() {
   if (!all.length && !tracking) {
     empty = {
       title: 'No transactions yet',
-      body: 'Turn on transaction tracking and Money Made will record payments from your bank and UPI SMS automatically.',
-      cta: 'Turn on tracking',
-      onCta: () => nav.navigate('Onboarding', { startAt: 'permission' }),
+      body:
+        Platform.OS === 'ios'
+          ? 'Set up the iOS Shortcuts automation and Money Made will record payments from your bank SMS automatically.'
+          : 'Turn on transaction tracking and Money Made will record payments from your bank and UPI SMS automatically.',
+      cta: Platform.OS === 'ios' ? 'Set up tracking' : 'Turn on tracking',
+      onCta: () => {
+        if (Platform.OS === 'ios') {
+          useSettingsStore
+            .getState()
+            .update({ trackingEnabled: true })
+            .catch(() => {});
+          nav.navigate('ShortcutSetup');
+        } else nav.navigate('Onboarding', { startAt: 'permission' });
+      },
     };
   } else if (!all.length) {
     empty = {
